@@ -1,0 +1,10 @@
+.DS_Store
+.idea
+*.iml
+npm-debug.log
+yarn-error.log
+node_modules
+.github
+src
+.eslintrc.js
+tsconfig.json
