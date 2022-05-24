@@ -1,15 +1,15 @@
 {
   "name": "@thecodingmachine/rnb-toolbox",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.3",
   "description": "Help all @thecodingmachine/react-native-boilerplate plugins creators to build awesome custom plugins",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thecodingmachine/rnb-plugin-typescript.git"
+    "url": "https://github.com/thecodingmachine/rnb-toolbox"
   },
   "author": "TheCodingMachine Lyon <lyon@thecodingmachine.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thecodingmachine/rnb-plugin-typescript/issues"
+    "url": "https://github.com/thecodingmachine/rnb-toolbox/issues"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,8 +19,8 @@
   "scripts": {
     "lint": "eslint .",
     "build": "tsc",
-    "publish-lib": "yarn build && yarn publish",
-    "publish-beta": "yarn build && yarn publish --tag beta"
+    "publish-lib": "yarn build && yarn publish --access public",
+    "publish-beta": "yarn build && yarn publish --access public --tag beta"
   },
   "keywords": [
     "thecodingmachine",
