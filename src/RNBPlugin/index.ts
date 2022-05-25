@@ -35,9 +35,12 @@ type InstallLifeCycle = {
     afterInstall: (v: unknown, pv: unknown[]) => Promise<unknown>,
 }
 
+type Version<M extends number, P extends number, F extends number> = 'latest' | `${M}.${P}.${F}`
+
 type RNBPluginParams = {
     organisation: string,
     packageName: string,
+    version: Version<number, number, number>
     promptsOptions: PromptsOptionsWrapperParams,
     applyIf?: ConditionFunction,
 }
@@ -59,9 +62,13 @@ export class RNBPlugin {
 
     private readonly templatePluginPath: `./node_modules/${string}/${string}/template` | './node_modules' = './node_modules';
 
+    private readonly version: string
+
     packageUrl: string
 
     name: string
+
+    promptsOptions?: PromptsOptions
 
     lifecycle: InstallLifeCycle = {
       onInstall: () => Promise.resolve(),
@@ -78,8 +85,8 @@ export class RNBPlugin {
 
     private loopOnPluginFiles = async ({
       accumulatedPath = '/',
-      onDirectoryFound = () => Promise.resolve(),
-      onFileFound = () => Promise.resolve(),
+      onDirectoryFound = () => Promise.resolve({}),
+      onFileFound = () => Promise.resolve({}),
       ...args
     }: HelperFunctionParams) => onEachFiles({
       rootDir: this.TEMPLATE_PLUGIN_PATH,
@@ -91,8 +98,8 @@ export class RNBPlugin {
 
     private loopOnSourceFiles = async ({
       accumulatedPath = '/',
-      onDirectoryFound = () => Promise.resolve(),
-      onFileFound = () => Promise.resolve(),
+      onDirectoryFound = () => Promise.resolve({}),
+      onFileFound = () => Promise.resolve({}),
       ...args
     }: HelperFunctionParams) => onEachFiles({
       rootDir: `${this.TEMPLATE_PATH}/src`,
@@ -116,7 +123,7 @@ export class RNBPlugin {
       if (this.conditionFunction(value, previousValues)) {
         try {
           await execSync(
-            `yarn add -D ${this.packageUrl}`,
+            `yarn add -D ${this.packageUrl}${this.version}`,
             { stdio: 'pipe' },
           );
           await this.lifecycle.onInstall(value, previousValues);
@@ -125,10 +132,6 @@ export class RNBPlugin {
             { stdio: 'pipe' },
           );
           await this.lifecycle.afterInstall(value, previousValues);
-          await execSync(
-            'yarn lint --fix',
-            { stdio: 'pipe' },
-          );
         } catch (e) {
           console.error(e);
         }
@@ -148,7 +151,9 @@ export class RNBPlugin {
         } else {
           msg = `${msg} \n\n`;
         }
-        this.message = k[color](msg);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.msg = k[color](msg);
       },
       initial,
     })
@@ -156,9 +161,11 @@ export class RNBPlugin {
     public constructor({
       organisation,
       packageName,
+      version = 'latest',
       promptsOptions,
       applyIf,
     }: RNBPluginParams) {
+      this.version = version === 'latest' ? '' : `@${version}`;
       this.packageUrl = `${organisation}/${packageName}`;
       this.name = `${organisation}/${packageName}`;
       this.templatePluginPath = `./node_modules/${organisation}/${packageName}/template`;
@@ -166,6 +173,6 @@ export class RNBPlugin {
       if (applyIf) {
         this.conditionFunction = applyIf;
       }
-      this.buildPromptsOptions(promptsOptions);
+      this.promptsOptions = this.buildPromptsOptions(promptsOptions);
     }
 }

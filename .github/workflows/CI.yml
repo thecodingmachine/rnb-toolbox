@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches:
+    - '*'
+
+jobs:
+  install-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install yarn dependencies
+        run: |
+          yarn install
+      - name: Run linters
+        run: |
+          yarn lint

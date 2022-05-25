@@ -5,10 +5,10 @@ export type CallbackOnEachFileParams = {
     element: Stats,
     rootDir: string,
     accumulatedPath: string,
-    next: (param: CallbackOnEachFileParams) => Promise<unknown>
 }
 
-export type CallbackOnEachFile = (param: CallbackOnEachFileParams) => Promise<unknown>
+export type CallbackOnEachFile =
+    (param: CallbackOnEachFileParams) => Promise<Record<string, unknown>>
 
 type OnEachFilesParams = {
     rootDir: string,
@@ -22,8 +22,8 @@ type OnEachFilesParams = {
 export const onEachFiles = async ({
   rootDir,
   accumulatedPath = '/',
-  onDirectoryFound = () => Promise.resolve(),
-  onFileFound = () => Promise.resolve(),
+  onDirectoryFound = () => Promise.resolve({}),
+  onFileFound = () => Promise.resolve({}),
   ...args
 }: OnEachFilesParams): Promise<unknown> => {
   try {
@@ -40,14 +40,7 @@ export const onEachFiles = async ({
               element,
               rootDir,
               accumulatedPath,
-              next: (...params) => onEachFiles({
-                rootDir,
-                accumulatedPath: `${accumulatedPath}${item}/`,
-                onDirectoryFound,
-                onFileFound,
-                ...args,
-                ...params,
-              }),
+              ...args,
             });
             return Promise.resolve(true);
           } catch (error) {
@@ -55,19 +48,12 @@ export const onEachFiles = async ({
           }
         }
         try {
-          await onDirectoryFound({
+          const { ...parameters } = await onDirectoryFound({
             item,
             element,
             rootDir,
             accumulatedPath,
-            next: (...params) => onEachFiles({
-              rootDir,
-              accumulatedPath: `${accumulatedPath}${item}/`,
-              onDirectoryFound,
-              onFileFound,
-              ...args,
-              ...params,
-            }),
+            ...args,
           });
           return onEachFiles({
             rootDir,
@@ -75,6 +61,7 @@ export const onEachFiles = async ({
             onDirectoryFound,
             onFileFound,
             ...args,
+            ...parameters,
           });
         } catch (error) {
           return Promise.reject(new Error('Sorry, an error occurred during the onDirectoryFound function, contact the developer of the plugin'));

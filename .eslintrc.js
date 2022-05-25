@@ -4,6 +4,13 @@ module.exports = {
     es2021: true,
     node: true,
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.ts'],
+      },
+    },
+  },
   extends: [
     'airbnb-base',
     'eslint:recommended',

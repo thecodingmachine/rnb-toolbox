@@ -1,0 +1,37 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug on this rnb-toolbox.
+labels: [ ":bug: bug" ]
+title: "[BUG]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ Please provide all the information requested. ⚠️
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please provide a clear and concise description of what the bug is. Include screenshots and code snippet if needed.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What toolbox version does this appear on?
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Desktop OS
+      description: What is the OS of your machine?
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: node version
+      description: What is the NodeJs version used on your machine?
+    validations:
+      required: true
