@@ -4,6 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
+  ignorePatterns: ['node_modules/', 'dist/'],
   settings: {
     'import/resolver': {
       node: {
