@@ -127,11 +127,11 @@ export class RNBPlugin {
             { stdio: 'pipe' },
           );
           await this.lifecycle.onInstall(value, previousValues);
+          await this.lifecycle.afterInstall(value, previousValues);
           await execSync(
             `yarn remove ${this.packageUrl}`,
             { stdio: 'pipe' },
           );
-          await this.lifecycle.afterInstall(value, previousValues);
         } catch (e) {
           console.error(e);
         }
