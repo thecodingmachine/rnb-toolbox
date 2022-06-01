@@ -1,6 +1,6 @@
 {
   "name": "@thecodingmachine/rnb-toolbox",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Help all @thecodingmachine/react-native-boilerplate plugins creators to build awesome custom plugins",
   "repository": {
     "type": "git",
