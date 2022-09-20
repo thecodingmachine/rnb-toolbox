@@ -45,7 +45,12 @@ class RNBPlugin {
                     await (0, child_process_1.execSync)(`yarn add -D ${this.packageUrl}${this.version}`, { stdio: 'pipe' });
                     await this.lifecycle.onInstall(value, previousValues);
                     await this.lifecycle.afterInstall(value, previousValues);
-                    await (0, child_process_1.execSync)(`yarn remove ${this.packageUrl}`, { stdio: 'pipe' });
+                    try {
+                        await (0, child_process_1.execSync)(`yarn remove ${this.packageUrl}`, { stdio: 'pipe' });
+                    }
+                    catch (e) {
+                        // Silent fail
+                    }
                 }
                 catch (e) {
                     console.error(e);
