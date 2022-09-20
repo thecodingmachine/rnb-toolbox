@@ -128,10 +128,14 @@ export class RNBPlugin {
           );
           await this.lifecycle.onInstall(value, previousValues);
           await this.lifecycle.afterInstall(value, previousValues);
-          await execSync(
-            `yarn remove ${this.packageUrl}`,
-            { stdio: 'pipe' },
-          );
+          try {
+            await execSync(
+              `yarn remove ${this.packageUrl}`,
+              { stdio: 'pipe' },
+            );
+          } catch (e) {
+            // Silent fail
+          }
         } catch (e) {
           console.error(e);
         }
